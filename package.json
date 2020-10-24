@@ -5,7 +5,8 @@
   "main": "js/app.js",
   "scripts": {
     "start": "NODE_ENV=production tsc && node js/src/server.js",
-    "test": "NODE_ENV=test nyc --reporter=html mocha --require ts-node/register --paths -p test/**.test.ts",
+    "test": "NODE_ENV=test nyc --reporter lcov mocha --require ts-node/register --paths -p test/**.test.ts",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "start:watch": "nodemon js/app.js",
     "compile-watch": "sudo yarn tsc --p tsconfig.json -w"
   },
@@ -23,6 +24,7 @@
     "@types/supertest": "^2.0.9",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "coveralls": "^3.1.0",
     "dotenv": "^8.2.0",
     "mocha": "^8.0.1",
     "morgan": "^1.10.0",
