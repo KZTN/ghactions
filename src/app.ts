@@ -1,7 +1,7 @@
-import routes from "./routes";
 import * as express from "express";
 import * as morgan from "morgan";
 import * as cors from "cors";
+import routes from "./routes";
 import "./bootstrap";
 
 class App {
