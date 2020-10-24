@@ -24,7 +24,7 @@ jobs:
           run: yarn test
         
         - uses: actions/checkout@master
-        - uses: codecov/codecov-action@v1
+        - uses: codecov/codecov-action@v1.0.5
           with:
             token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
             file: ./coverage/lcov.info # optional
