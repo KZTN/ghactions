@@ -12,8 +12,8 @@ jobs:
             - name: Checkout repository
             - uses: actions/checkout@v2
 
-            - name: Intall Node.js
-              uses: actions/setup-nodev@v1
+            - name: Install Node.js
+            - uses: actions/setup-nodev@v1
               with:
                 node-version: 12.x
 
