@@ -1,7 +1,6 @@
 import * as express from "express";
 import translateNumber from "../../util/ChangeNumberToWords";
 class TranslateController {
-
   public async index(
     req: express.Request,
     res: express.Response
@@ -20,7 +19,5 @@ class TranslateController {
     }
     return res.send(translateNumber(Number(req.query.translate)));
   }
-
 }
-
 export default new TranslateController();
