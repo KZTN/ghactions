@@ -25,7 +25,10 @@ jobs:
         
         - uses: actions/checkout@master
         - uses: codecov/codecov-action@v1
+          with:
+              token: ${{ secrets.CODECOV_TOKEN }}
           
         env:
             CI: true
+            CODECOV_TOKEN: "6d488a67-462d-4707-9c5d-0df67352b9e4"
 
