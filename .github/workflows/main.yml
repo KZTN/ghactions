@@ -24,7 +24,7 @@ jobs:
           run: yarn test
         
         - uses: actions/checkout@master
-        - uses: codecov/codecov-action@v1.0.5
+        - uses: codecov/codecov-action@v1
           
         env:
             CI: true
