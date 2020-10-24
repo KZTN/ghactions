@@ -1,4 +1,3 @@
-<h1 align="center">SalesfyChallengeBackend</h1>
 <h4 align="center">
   API de Tradução de números em sua representação textual
 </h4>
