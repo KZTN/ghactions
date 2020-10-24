@@ -9,18 +9,25 @@ jobs:
         runs-on:  ubuntu-latest
         if: github.event.pull_request.draft == false
         steps:
-            - name: Checkout repository
-            - uses: actions/checkout@v2
+        - name: Checkout repository
+          uses: actions/checkout@v2
 
-            - name: Install Node.js
-            - uses: actions/setup-nodev@v1
-              with:
-                node-version: 12.x
+        - name: Intall Node.js
+          uses: actions/setup-nodev@v1
+          with:
+            node-version: 12.x
 
-            - name: Install dependencies
-              run: yarn
+        - name: Install dependencies
+          run: yarn
             
-            - name: Test
-            - run: yarn test
-              env:
-                CI: true
+        - name: Test
+          run: yarn test
+        
+        - name: Coveralls
+          uses: coverallsapp/github-action@master
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            
+        env:
+            CI: true
+
