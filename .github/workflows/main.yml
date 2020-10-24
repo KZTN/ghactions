@@ -13,14 +13,21 @@ jobs:
           uses: actions/checkout@v2
 
         - name: Intall Node.js
-          uses: actions/setup-node@v2-beta
+          uses: actions/setup-nodev@v1
           with:
-            node-version: '12'
+            node-version: 12.x
 
         - name: Install dependencies
           run: yarn
             
         - name: Test
           run: yarn test
+        
+        - name: Coveralls
+          uses: coverallsapp/github-action@master
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            
         env:
             CI: true
+
