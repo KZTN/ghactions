@@ -27,6 +27,11 @@ jobs:
           uses: codecov/codecov-action@v1.0.14
           with:
             github-token: ${{ secrets.GITHUB_TOKEN }}
+            
+        - name: Danger
+          uses: danger/danger-js@9.1.6
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         env:
             CI: true
 
