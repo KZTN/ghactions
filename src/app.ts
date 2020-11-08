@@ -5,6 +5,7 @@ import * as cors from "cors";
 import "./bootstrap";
 
 class App {
+
   public app = express.application;
 
   public constructor() {
@@ -17,9 +18,11 @@ class App {
     this.app.use(cors());
     this.app.use(morgan("dev"));
   }
+
   private routes(): void {
     this.app.use(routes);
   }
+
 }
 
 export default new App().app;
