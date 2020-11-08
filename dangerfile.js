@@ -1,62 +1,46 @@
-# Sometimes its a README fix, or something like that - which isn't relevant for
-# including in a CHANGELOG for example
-has_app_changes = !git.modified_files.grep(/lib/).empty?
-has_test_changes = !git.modified_files.grep(/spec/).empty?
-is_version_bump = git.modified_files.sort == ["CHANGELOG.md", "lib/danger/version.rb"].sort
+import {message, danger} from "danger"
 
-if has_app_changes && !has_test_changes && !is_version_bump
-  warn("Tests were not updated", sticky: false)
-end
+const reviewersCount = danger.github.requested_reviewers.users.length
+if (reviewersCount === 0) {
+  warn(`🕵 Whoops, I don't see any reviewers. Remember to add one.`)
+} else if (reviewersCount > 1) {
+  warn(
+    `It's great to have ${reviewersCount} reviewers. Remember though that more than 1 reviewer may lead to uncertainty as to who is responsible for the review.`
+  )
+}
 
-# Thanks other people!
-message(":tada:") if is_version_bump && github.pr_author != "orta"
+const labels = danger.github.issue.labels
+findName = function(name) {
+  return label.name == name
+}
+if (labels.length == 0) {
+  warn("Don't forget to add PMBC or NonPMBC when the build passes")
+} else {
+  console.log(labels)
+}
+if(labels.find(label => label.name === "PMBC")) {
+  message("Waiting for Pre Merge Beta Check... 😴")
+}
+else if(labels.find(label => label.name === "NonPMBC")) {
+  warn("🕵️ Skipping Pre Merge Beta Check... are you sure about that?")
+}
 
-# Make a note about contributors not in the organization
-unless github.api.organization_member?("danger", github.pr_author)
-  # Pay extra attention if they modify the gemspec
-  if git.modified_files.include?("*.gemspec")
-    warn "External contributor has edited the Gemspec"
-  end
-end
+const prTitle = danger.github.pr.title
+const ticketPattern = /\[[A-Z]{2,4}-\d{1,5}\]/g
+if (!ticketPattern.test(prTitle)) {
+  fail("🔍 I can't find the Jira ticket number in the PR title. Expecting to find the pattern \[[A-Z]{2,4}-\d+\]")
+}
 
-# Mainly to encourage writing up some reasoning about the PR, rather than
-# just leaving a title
-if github.pr_body.length < 5
-  fail "Please provide a summary in the Pull Request description"
-end
+const prBody = danger.github.pr.body
+const ticketUrlPattern = /https:\/\/venmoinc\.atlassian\.net\/browse\/[A-Z]{2,4}-\d+/g
+if (!ticketUrlPattern.test(prBody)) {
+  fail(
+    "🔍 I can't find the Jira ticket URL in the PR body. Please add a link to the Jira ticket, it's the most efficient way to jump to the corresponding ticket in Jira 🏎"
+  )
+}
 
-# Let people say that this isn't worth a CHANGELOG entry in the PR if they choose
-declared_trivial = (github.pr_title + github.pr_body).include?("#trivial") || !has_app_changes
-
-if !git.modified_files.include?("CHANGELOG.md") && !declared_trivial
-  fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md).", sticky: false)
-end
-
-# Oddly enough, it's quite possible to do some testing of Danger, inside Danger
-# So, you can ignore these, if you're looking at the Dangerfile to get ideas.
-#
-# If these are all empty something has gone wrong, better to raise it in a comment
-if git.modified_files.empty? && git.added_files.empty? && git.deleted_files.empty?
-  fail "This PR has no changes at all, this is likely an issue during development."
-end
-
-# This comes from `./danger_plugins/protect_files.rb` which is automatically parsed by Danger
-files.protect_files(path: "danger.gemspec", message: ".gemspec modified", fail_build: false)
-
-# Ensure that our core plugins all have 100% documentation
-core_plugins = Dir.glob("lib/danger/danger_core/plugins/*.rb")
-core_lint_output = `bundle exec yard stats #{core_plugins.join " "} --list-undoc --tag tags`
-
-if !core_lint_output.include?("100.00%")
-  # fail "The core plugins are not at 100% doc'd - see below:", sticky: false
-  # markdown "```\n#{core_lint_output}```"
-elsif core_lint_output.include? "warning"
-  warn "The core plugins are have yard warnings - see below", sticky: false
-  markdown "```\n#{core_lint_output}```"
-end
-
-unless ENV["RUNNING_IN_ACTIONS"]
-  junit.parse "junit-results.xml"
-  junit.headers = %i(file name)
-  junit.report
-end
+if (danger.github.pr.deletions > danger.github.pr.additions) {
+  message(
+    `👏 Great job! I see more lines deleted than added. Thanks for keeping us lean!`
+  )
+}

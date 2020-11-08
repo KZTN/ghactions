@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "danger": "^10.5.1",
     "express": "^4.17.1"
   }
 }
