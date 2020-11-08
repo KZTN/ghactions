@@ -12,7 +12,6 @@ class App {
     this.middlewares();
     this.routes();
   }
-  
   private middlewares(): void {
     this.app.use(cors());
     this.app.use(morgan("dev"));
